@@ -8,7 +8,7 @@ import requests
 # ============================================
 # CONFIGURATION - Add your API key here
 # ============================================
-GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE"  # Get free key from: https://makersuite.google.com/app/apikey
+GEMINI_API_KEY = "AIzaSyCP1HNCANX6VBIHGGGNiKyQsjqtryqypfI"  # Get free key from: https://makersuite.google.com/app/apikey
 
 # ============================================
 # MAIN CHATBOT LOGIC
@@ -20,7 +20,7 @@ def get_ai_response(user_message):
     Automatically detects language and responds in the same language
     """
     
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={GEMINI_API_KEY}"
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent"
     
     # System prompt to make the bot friendly and multilingual
     prompt = f"""You are a helpful and friendly WhatsApp chatbot assistant. 
@@ -45,7 +45,8 @@ Respond naturally in the same language as the user's message."""
     }
     
     headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "X-goog-api-key": GEMINI_API_KEY
     }
     
     try:
