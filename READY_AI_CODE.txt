@@ -2,7 +2,7 @@ import json
 import requests
 
 # AI-Powered WhatsApp Chatbot with YOUR API KEY
-GEMINI_API_KEY = "AIzaSyBAxfy2mvbxpMpWbriB8aYNlOOXpJiz7aE"
+GEMINI_API_KEY = "YOUR_API_KEY"
 
 def get_ai_response(user_message):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={GEMINI_API_KEY}"
