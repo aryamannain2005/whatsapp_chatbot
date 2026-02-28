@@ -1,0 +1,64 @@
+import json
+import requests
+
+# AI-Powered WhatsApp Chatbot with YOUR API KEY
+GEMINI_API_KEY = "AIzaSyBAxfy2mvbxpMpWbriB8aYNlOOXpJiz7aE"
+
+def get_ai_response(user_message):
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={GEMINI_API_KEY}"
+    
+    prompt = f"""You are a helpful and friendly WhatsApp chatbot assistant. 
+
+Rules:
+1. Detect the language of the user's message and respond in THE SAME LANGUAGE
+2. Be conversational, warm, and helpful
+3. Keep responses concise (2-3 sentences max for casual chat)
+4. If user asks questions, provide helpful answers
+5. Match the user's tone and style
+
+User message: {user_message}
+
+Respond naturally in the same language as the user's message."""
+    
+    payload = {"contents": [{"parts": [{"text": prompt}]}]}
+    headers = {"Content-Type": "application/json"}
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        ai_response = data['candidates'][0]['content']['parts'][0]['text']
+        return ai_response.strip()
+    except Exception as e:
+        return f"Sorry, I'm having trouble: {str(e)}"
+
+# Get incoming webhook data
+webhook_data = items[0].json
+
+# Extract message and sender
+try:
+    entry = webhook_data.get('entry', [{}])[0]
+    changes = entry.get('changes', [{}])[0]
+    value = changes.get('value', {})
+    messages = value.get('messages', [{}])
+    
+    if messages:
+        message_data = messages[0]
+        sender = message_data.get('from', '')
+        incoming_msg = message_data.get('text', {}).get('body', '')
+    else:
+        sender = webhook_data.get('from', 'unknown')
+        incoming_msg = webhook_data.get('text', webhook_data.get('message', ''))
+except:
+    sender = webhook_data.get('from', 'unknown')
+    incoming_msg = webhook_data.get('text', webhook_data.get('message', 'hello'))
+
+# Get AI response
+response = get_ai_response(incoming_msg)
+
+# Return for next node
+item['json']['response'] = response
+item['json']['sender'] = sender
+item['json']['original_message'] = incoming_msg
+
+return _items
